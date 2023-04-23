@@ -16,6 +16,7 @@ class DBStorage:
     """database storage class"""
     __engine = None
     __session = None
+    __session_factory = None
 
     db_objs = {"User": User, "Place": Place,
                "Amenity": Amenity, "State": State,
@@ -36,8 +37,8 @@ class DBStorage:
         """query on the current databaase session for all objects"""
         entities = {}
         if cls:
-            for obj in self.__session.query(self.db_objs[cls]).all():
-                key = cls + "." + str(obj.id)
+            for obj in self.__session.query(cls).all():
+                key = cls.__name__ + "." + str(obj.id)
                 entities.update({key: obj})
             return (entities)
         else:
@@ -64,5 +65,9 @@ class DBStorage:
         """create all database with the metadata"""
         Base.metadata.create_all(self.__engine)
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        session_factory = scoped_session(Session)
-        self.__session = session_factory()
+        self.__session_factory = scoped_session(Session)
+        self.__session = self.__session_factory()
+
+    def close(self):
+        """close the session object"""
+        self.__session_factory.remove()

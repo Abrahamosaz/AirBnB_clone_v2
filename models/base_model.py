@@ -22,6 +22,8 @@ class BaseModel:
             self.updated_at = datetime.now()
         else:
             self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             for key, value in kwargs.items():
                 if key == 'updated_at':
                     kwargs['updated_at'] = \

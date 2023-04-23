@@ -16,10 +16,15 @@ class State(BaseModel, Base):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
     else:
+        """if the datatype storage is not database"""
         @property
         def cities(self):
+            """import models module"""
+            import models
+            from models.city import City
+
             city_list = []
-            for city in list(models.storage.all("City").values()):
+            for city in list(models.storage.all(City).values()):
                 if city.state_id == self.id:
                     city_list.append(city)
             return city_list

@@ -14,7 +14,7 @@ class FileStorage:
             return FileStorage.__objects
         f_inst = {}
         for key, value in FileStorage.__objects.items():
-            if key.split('.')[0] == cls:
+            if key.split('.')[0] == cls.__name__:
                 f_inst.update({key: value})
         return f_inst
 
@@ -65,5 +65,5 @@ class FileStorage:
                 del self.all()[key]
 
     def close(self):
-        """call reload method for deserialising the file"""
+        """call reload method for deserialising the file to objects"""
         self.reload()
